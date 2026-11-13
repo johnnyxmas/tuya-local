@@ -5,10 +5,12 @@ products:
     model: Elite
 entities:
   # Power (DP 1) and "Forbidden heat" (DP 107) together give off / heat /
-  # fan_only. Writing a setpoint switches the heating position (DP 5) to
-  # "Level 3" (thermostat); fan_only and off force it back to H0, and off also
-  # resets the setpoint to its minimum.
+  # fan_only. The heating position (DP 5) is the preset: H0, H1, H2 and
+  # "Level 3" (thermostat, shown as "F" on the display). Writing a setpoint
+  # switches it to Level 3; fan_only and off force H0, and off also resets
+  # the setpoint to its minimum.
   - entity: climate
+    translation_key: heater
     dps:
       - id: 1
         type: boolean
@@ -45,6 +47,18 @@ entities:
             conditions:
               - dps_val: f
                 value_redirect: temp_current_f
+      - id: 5
+        name: preset_mode
+        type: string
+        mapping:
+          - dps_val: "0"
+            value: none
+          - dps_val: "1"
+            value: low
+          - dps_val: "2"
+            value: high
+          - dps_val: "3"
+            value: auto
       - id: 13
         name: temperature_unit
         type: string
@@ -68,25 +82,6 @@ entities:
         type: boolean
         name: heat_disable
         hidden: true
-  # The app's "heating position". It changes from the app, the remote, or when
-  # a setpoint is written, but the device ignores direct local writes to it.
-  - entity: sensor
-    name: Heating position
-    icon: "mdi:radiator"
-    class: enum
-    dps:
-      - id: 5
-        type: string
-        name: sensor
-        mapping:
-          - dps_val: "0"
-            value: H0
-          - dps_val: "1"
-            value: H1
-          - dps_val: "2"
-            value: H2
-          - dps_val: "3"
-            value: Level 3
   - entity: select
     translation_key: temperature_unit
     category: config
@@ -207,6 +202,39 @@ entities:
           - dps_val: "12"
             value: Color lock
   - entity: select
+    name: Downlight color
+    icon: "mdi:palette"
+    category: config
+    dps:
+      - id: 105
+        type: string
+        name: option
+        mapping:
+          - dps_val: "1"
+            value: "1"
+          - dps_val: "2"
+            value: "2"
+          - dps_val: "3"
+            value: "3"
+          - dps_val: "4"
+            value: "4"
+          - dps_val: "5"
+            value: "5"
+          - dps_val: "6"
+            value: "6"
+          - dps_val: "7"
+            value: "7"
+          - dps_val: "8"
+            value: "8"
+          - dps_val: "9"
+            value: "9"
+          - dps_val: "10"
+            value: "10"
+          - dps_val: "11"
+            value: "11"
+          - dps_val: "12"
+            value: "12"
+  - entity: select
     translation_key: timer
     category: config
     dps:
@@ -228,6 +256,12 @@ entities:
             value: "4h"
           - dps_val: 5H
             value: "5h"
+          - dps_val: 6H
+            value: "6h"
+          - dps_val: 7H
+            value: "7h"
+          - dps_val: 8H
+            value: "8h"
   - entity: lock
     translation_key: child_lock
     category: config
